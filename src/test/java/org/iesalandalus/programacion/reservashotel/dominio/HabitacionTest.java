@@ -1,5 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.dominio;
 
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
