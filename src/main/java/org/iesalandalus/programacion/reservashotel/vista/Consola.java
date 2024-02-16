@@ -7,6 +7,7 @@ import org.iesalandalus.programacion.utilidades.Entrada;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva.FORMATO_FECHA_RESERVA;
 
@@ -73,7 +74,7 @@ public final class Consola {
         try {
             System.out.print(mensaje);
             return LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             System.out.println("El formato de fecha introducido no es válido.");
             return leerFecha(mensaje);
         }
@@ -118,7 +119,12 @@ public final class Consola {
             System.out.println(opcion.ordinal() + "  -  " + opcion.toString());
         }
         System.out.print("Escoja tipo de habitación: ");
-        return TipoHabitacion.values()[Entrada.entero()];
+        int eleccionHabitacion = Entrada.entero();
+
+        if (eleccionHabitacion < 1 || eleccionHabitacion > TipoHabitacion.values().length-1){
+            throw new IllegalArgumentException("ERROR: El tipo de habitación escogido no existe o está fuera de rango.");
+        }
+        return TipoHabitacion.values()[eleccionHabitacion];
     }
 
     public static Regimen leerRegimen() {
@@ -126,7 +132,12 @@ public final class Consola {
             System.out.println(opcion.ordinal() + "  -  " + opcion.toString());
         }
         System.out.print("Escoja tipo de régimen: ");
-        return Regimen.values()[Entrada.entero()];
+        int eleccionRegimen = Entrada.entero();
+
+        if (eleccionRegimen < 1 || eleccionRegimen > Regimen.values().length-1){
+            throw new IllegalArgumentException("ERROR: El tipo de habitación escogido no existe o está fuera de rango.");
+        }
+        return Regimen.values()[eleccionRegimen];
     }
 
     public static Reserva leerReserva() {
@@ -145,8 +156,8 @@ public final class Consola {
         System.out.print("Introduzca número de personas: ");
         numeroPersonas = Entrada.entero();
 
-        huesped = leerHuesped();
-        habitacion = leerHabitacion();
+        huesped = leerHuespedPorDni();
+        habitacion = leerHabitacionPorIdentificador();
         regimen = leerRegimen();
 
         reserva = new Reserva(huesped, habitacion, regimen, fechaInicioReserva, fechaFinReserva, numeroPersonas);
