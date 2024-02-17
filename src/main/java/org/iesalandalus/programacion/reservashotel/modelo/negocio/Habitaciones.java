@@ -8,15 +8,15 @@ import javax.naming.OperationNotSupportedException;
 public class Habitaciones {
     private final int capacidad;
     private int tamano;
-    private Habitacion[] habitaciones;
+    private Habitacion[] coleccionHabitaciones;
 
     public Habitaciones(int capacidad) {
         if (capacidad <= 0) {
             throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
         }
         this.capacidad = capacidad;
-        habitaciones = new Habitacion[this.capacidad];
-        tamano = getTamano();
+        coleccionHabitaciones = new Habitacion[this.capacidad];
+        tamano = 0;
     }
 
     public Habitacion[] get() {
@@ -39,8 +39,8 @@ public class Habitaciones {
 
         Habitacion[] copiaHabitaciones = new Habitacion[getCapacidad()];
 
-        for (int i = 0; i < habitaciones.length; i++) {
-            copiaHabitaciones[i] = new Habitacion(habitaciones[i]);
+        for (int i = 0; i < coleccionHabitaciones.length; i++) {
+            copiaHabitaciones[i] = new Habitacion(coleccionHabitaciones[i]);
         }
         return copiaHabitaciones;
     }
@@ -51,8 +51,8 @@ public class Habitaciones {
 
     public int getTamano() {
         int counter = 0;
-        for (int i = 0; i < habitaciones.length; i++)
-            if (habitaciones[i] != null)
+        for (int i = 0; i < coleccionHabitaciones.length; i++)
+            if (coleccionHabitaciones[i] != null)
                 counter++;
         return counter;
     }
@@ -81,8 +81,8 @@ public class Habitaciones {
         }
         nuevoArray[nuevoArray.length - 1] = new Habitacion(habitacion);
 
-        this.habitaciones = new Habitacion[nuevoArray.length];
-        System.arraycopy(nuevoArray, 0, habitaciones, 0, nuevoArray.length);
+        this.coleccionHabitaciones = new Habitacion[nuevoArray.length];
+        System.arraycopy(nuevoArray, 0, coleccionHabitaciones, 0, nuevoArray.length);
         tamano = getTamano();
     }
 
@@ -133,11 +133,11 @@ public class Habitaciones {
 
     private void desplazarUnaPosicionHaciaLaIzquierda(int indice) {
         Habitacion[] nuevoArray = new Habitacion[tamano - 1];
-        System.arraycopy(habitaciones, 0, nuevoArray, 0, indice);
+        System.arraycopy(coleccionHabitaciones, 0, nuevoArray, 0, indice);
         if (!tamanoSuperado(indice)) {
-            System.arraycopy(habitaciones, indice + 1, nuevoArray, indice, habitaciones.length - indice - 1);
+            System.arraycopy(coleccionHabitaciones, indice + 1, nuevoArray, indice, coleccionHabitaciones.length - indice - 1);
         }
-        habitaciones = nuevoArray;
+        coleccionHabitaciones = nuevoArray;
         tamano = getTamano();
     }
 }

@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 public class Reservas {
     private final int capacidad;
     private int tamano;
-    private Reserva[] reservas;
+    private Reserva[] coleccionReservas;
 
     public Reservas(int capacidad) {
         if (capacidad <= 0) {
             throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
         }
         this.capacidad = capacidad;
-        reservas = new Reserva[this.capacidad];
-        tamano = getTamano();
+        coleccionReservas = new Reserva[this.capacidad];
+        tamano = 0;
     }
 
     public Reserva[] get() {
@@ -31,8 +31,8 @@ public class Reservas {
 
         Reserva[] copiaReservaes = new Reserva[getCapacidad()];
 
-        for (int i = 0; i < reservas.length; i++) {
-            copiaReservaes[i] = new Reserva(reservas[i]);
+        for (int i = 0; i < coleccionReservas.length; i++) {
+            copiaReservaes[i] = new Reserva(coleccionReservas[i]);
         }
         return copiaReservaes;
     }
@@ -43,8 +43,8 @@ public class Reservas {
 
     public int getTamano() {
         int counter = 0;
-        for (int i = 0; i < reservas.length; i++)
-            if (reservas[i] != null)
+        for (int i = 0; i < coleccionReservas.length; i++)
+            if (coleccionReservas[i] != null)
                 counter++;
         return counter;
     }
@@ -73,8 +73,8 @@ public class Reservas {
         }
         nuevoArray[nuevoArray.length - 1] = new Reserva(reserva);
 
-        this.reservas = new Reserva[nuevoArray.length];
-        System.arraycopy(nuevoArray, 0, reservas, 0, nuevoArray.length);
+        this.coleccionReservas = new Reserva[nuevoArray.length];
+        System.arraycopy(nuevoArray, 0, coleccionReservas, 0, nuevoArray.length);
         tamano = getTamano();
     }
 
@@ -128,11 +128,11 @@ public class Reservas {
 
     private void desplazarUnaPosicionHaciaLaIzquierda(int indice) {
         Reserva[] nuevoArray = new Reserva[tamano - 1];
-        System.arraycopy(reservas, 0, nuevoArray, 0, indice);
+        System.arraycopy(coleccionReservas, 0, nuevoArray, 0, indice);
         if (!tamanoSuperado(indice)) {
-            System.arraycopy(reservas, indice + 1, nuevoArray, indice, reservas.length - indice - 1);
+            System.arraycopy(coleccionReservas, indice + 1, nuevoArray, indice, coleccionReservas.length - indice - 1);
         }
-        reservas = nuevoArray;
+        coleccionReservas = nuevoArray;
         tamano = getTamano();
     }
 
@@ -159,7 +159,7 @@ public class Reservas {
         }
         Reserva[] reservasHuesped = new Reserva[capacidad];
         int posReservasTipo = 0;
-        for (int i = 0; i < reservas.length; i++) {
+        for (int i = 0; i < coleccionReservas.length; i++) {
             Reserva reserva = get()[i];
             if (reserva.getHabitacion().getTipoHabitacion().equals(tipoHabitacion)) {
                 reservasHuesped[posReservasTipo] = new Reserva(reserva);
@@ -175,7 +175,7 @@ public class Reservas {
 
         Reserva[] reservasHuesped = new Reserva[capacidad];
         int posReservasHabitacion = 0;
-        for (int i = 0; i < reservas.length; i++) {
+        for (int i = 0; i < coleccionReservas.length; i++) {
             Reserva reserva = get()[i];
             if (reserva.getHabitacion().getIdentificador().equals(habitacion.getIdentificador()) &&
                     reserva.getFechaInicioReserva().isAfter(LocalDate.now())) {

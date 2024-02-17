@@ -28,6 +28,9 @@ public class Reserva {
     }
 
     public void setHuesped(Huesped huesped) {
+        if (huesped == null) {
+            throw new NullPointerException("ERROR: El huésped de una reserva no puede ser nulo.");
+        }
         this.huesped = huesped;
     }
 
@@ -36,6 +39,9 @@ public class Reserva {
     }
 
     public void setHabitacion(Habitacion habitacion) {
+        if (habitacion == null) {
+            throw new NullPointerException("ERROR: La habitación de una reserva no puede ser nula.");
+        }
         this.habitacion = habitacion;
     }
 
@@ -44,6 +50,9 @@ public class Reserva {
     }
 
     public void setRegimen(Regimen regimen) {
+        if (regimen == null) {
+            throw new NullPointerException("ERROR: El régimen de una reserva no puede ser nulo.");
+        }
         this.regimen = regimen;
     }
 
@@ -116,15 +125,12 @@ public class Reserva {
     }
 
     public double getPrecio() {
-        setPrecio(precio);
+        setPrecio();
         return precio;
     }
 
-    private void setPrecio(double precio) {
-        if (precio < 0) {
-            throw new IllegalArgumentException("Error: Precio menor o igual a 0");
-        }
-
+    private void setPrecio() {
+        double precio = 0;
         double costeHabitacion = getHabitacion().getPrecio();
         double costeRegimen = getRegimen().getIncrementoPrecio() * getNumeroPersonas();
 
@@ -132,6 +138,9 @@ public class Reserva {
 
         precio = (costeHabitacion + costeRegimen) * period.getDays();
 
+        if (precio <= 0) {
+            throw new IllegalArgumentException("ERROR: El precio no puede ser menor o igual a 0");
+        }
         this.precio = precio;
     }
 
@@ -147,32 +156,13 @@ public class Reserva {
         TipoHabitacion numeroMaximoPersonas = habitacion.getTipoHabitacion();
 
         if (numeroPersonas > numeroMaximoPersonas.getNumeroMaximoPersonas()) {
-            throw new IllegalArgumentException("ERROR: El número de personas de una reserva no puede superar al máximo de personas establacidas para el tipo de habitación reservada.");
+            throw new IllegalArgumentException("ERROR: El número de personas de una reserva no puede superar al máximo de personas establecidas para el tipo de habitación reservada.");
         }
 
         this.numeroPersonas = numeroPersonas;
     }
 
     public Reserva(Huesped huesped, Habitacion habitacion, Regimen regimen, LocalDate fechaInicioReserva, LocalDate fechaFinReserva, int numeroPersonas) {
-        if (huesped == null) {
-            throw new NullPointerException("ERROR: El huésped de una reserva no puede ser nulo.");
-        }
-        if (habitacion == null) {
-            throw new NullPointerException("ERROR: La habitación de una reserva no puede ser nula.");
-        }
-        if (regimen == null) {
-            throw new NullPointerException("ERROR: El régimen de una reserva no puede ser nulo.");
-        }
-        if (fechaInicioReserva == null) {
-            throw new NullPointerException("ERROR: La fecha de inicio de una reserva no puede ser nula.");
-        }
-        if (fechaFinReserva == null) {
-            throw new NullPointerException("ERROR: La fecha de fin de una reserva no puede ser nula.");
-        }
-        if (numeroPersonas <= 0) {
-            throw new IllegalArgumentException("ERROR: El número de personas de una reserva no puede ser menor o igual a 0.");
-        }
-
         setHuesped(huesped);
         setHabitacion(habitacion);
         setRegimen(regimen);
@@ -191,6 +181,9 @@ public class Reserva {
         this.fechaInicioReserva = reservaCopia.getFechaInicioReserva();
         this.fechaFinReserva = reservaCopia.getFechaFinReserva();
         this.numeroPersonas = reservaCopia.getNumeroPersonas();
+        this.precio = reservaCopia.getPrecio();
+        this.checkIn = reservaCopia.getCheckIn();
+        this.checkOut = reservaCopia.getCheckOut();
     }
 
     @Override

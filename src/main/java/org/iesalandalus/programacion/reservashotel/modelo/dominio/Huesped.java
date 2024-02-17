@@ -114,6 +114,9 @@ public class Huesped {
         if (fechaNacimiento == null) {
             throw new NullPointerException("ERROR: La fecha de nacimiento de un huésped no puede ser nula.");
         }
+        if (fechaNacimiento.isAfter(LocalDate.now())){
+            throw new IllegalArgumentException("ERROR: La fecha de nacimiento de un huésped no puede ser posterior a hoy.");
+        }
         this.fechaNacimiento = fechaNacimiento;
     }
     private String getIniciales(){
