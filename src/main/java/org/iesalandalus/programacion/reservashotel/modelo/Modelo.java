@@ -10,17 +10,17 @@ import org.iesalandalus.programacion.reservashotel.modelo.negocio.Reservas;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Modelo {
-    private int CAPACIDAD = 1;
     private Huespedes huespedes;
     private Habitaciones habitaciones;
     private Reservas reservas;
 
     public void comenzar() {
-        huespedes = new Huespedes(CAPACIDAD);
-        habitaciones = new Habitaciones(CAPACIDAD);
-        reservas = new Reservas(CAPACIDAD);
+        huespedes = new Huespedes();
+        habitaciones = new Habitaciones();
+        reservas = new Reservas();
     }
 
     public void terminar() {
@@ -40,7 +40,7 @@ public class Modelo {
         huespedes.borrar(huesped);
     }
 
-    public Huesped[] getHuespedes() {
+    public List<Huesped> getHuespedes() {
         return huespedes.get();
     }
 
@@ -57,11 +57,11 @@ public class Modelo {
         habitaciones.borrar(habitacion);
     }
 
-    public Habitacion[] getHabitaciones() {
+    public List<Habitacion> getHabitaciones() {
         return habitaciones.get();
     }
 
-    public Habitacion[] getHabitaciones(TipoHabitacion tipoHabitacion) {
+    public List<Habitacion> getHabitaciones(TipoHabitacion tipoHabitacion) {
         return habitaciones.get(tipoHabitacion);
     }
 
@@ -78,19 +78,19 @@ public class Modelo {
         reservas.borrar(reserva);
     }
 
-    public Reserva[] getReservas() {
+    public List<Reserva> getReservas() {
         return reservas.get();
     }
 
-    public Reserva[] getReservas(Huesped huesped) {
+    public List<Reserva> getReservas(Huesped huesped) {
         return reservas.getReservas(huesped);
     }
 
-    public Reserva[] getReservas(TipoHabitacion tipoHabitacion) {
+    public List<Reserva> getReservas(TipoHabitacion tipoHabitacion) {
         return reservas.getReservas(tipoHabitacion);
     }
 
-    public Reserva[] getReservasFuturas(Habitacion habitacion) {
+    public List<Reserva> getReservasFuturas(Habitacion habitacion) {
         return reservas.getReservasFuturas(habitacion);
     }
 
