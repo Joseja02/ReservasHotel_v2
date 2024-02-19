@@ -364,7 +364,26 @@ public class Vista {
             if (controlador.getReservas() != null && !controlador.getReservas().isEmpty()) {
                 System.out.println("Estas son las reservas existentes: ");
                 System.out.println(" ");
-                Iterator<Reserva> iterador = controlador.getReservas().iterator();
+
+                List<Reserva> reservasAMostrar = controlador.getReservas();
+
+                if (!reservasAMostrar.isEmpty()) {
+                    Collections.sort(reservasAMostrar, Comparator.comparing(Reserva::getFechaInicioReserva).reversed());
+                }
+
+                boolean mismaFechaInicio = false;
+                for (int i = 0; i < reservasAMostrar.size() - 1; i++) {
+                    if (reservasAMostrar.get(i).getFechaInicioReserva().equals(reservasAMostrar.get(i + 1).getFechaInicioReserva())) {
+                        mismaFechaInicio = true;
+                    }
+                }
+
+                if (mismaFechaInicio) {
+                    Comparator<Habitacion> comparadorHabitacion = Comparator.comparing(Habitacion::getPlanta).thenComparing(Habitacion::getPuerta);
+                    reservasAMostrar.sort(Comparator.comparing(Reserva::getHabitacion, comparadorHabitacion));
+                }
+
+                Iterator<Reserva> iterador = reservasAMostrar.iterator();
                 while (iterador.hasNext()) {
                     Reserva reserva = iterador.next();
                     System.out.println(reserva.toString());
