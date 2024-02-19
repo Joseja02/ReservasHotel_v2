@@ -5,6 +5,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Huespedes {
@@ -22,8 +23,11 @@ public class Huespedes {
 
         List<Huesped> copiaHuespedes = new ArrayList<>();
 
-        copiaHuespedes.addAll(coleccionHuespedes);
-
+        Iterator<Huesped> iterador = coleccionHuespedes.iterator();
+        while (iterador.hasNext()) {
+            Huesped huesped = iterador.next();
+            copiaHuespedes.add(new Huesped(huesped));
+        }
         return copiaHuespedes;
     }
 
@@ -39,30 +43,35 @@ public class Huespedes {
         if (huesped == null) {
             throw new NullPointerException("ERROR: No se puede insertar un huésped nulo.");
         }
-        if (buscar(huesped) != null) {
-            throw new OperationNotSupportedException("ERROR: Ya existe un huésped igual.");
+        if (coleccionHuespedes.contains(huesped)) {
+            throw new OperationNotSupportedException("ERROR: Ya existe un huésped con ese dni.");
         }
-        if (!coleccionHuespedes.contains(huesped)) {
-            coleccionHuespedes.add(huesped);
-        }
+        coleccionHuespedes.add(huesped);
     }
+
     public Huesped buscar(Huesped huesped) {
+        if (huesped == null) {
+            throw new NullPointerException("ERROR: No se puede buscar un huésped nulo.");
+        }
 
         if (coleccionHuespedes.contains(huesped)) {
             int i = coleccionHuespedes.indexOf(huesped);
             huesped = coleccionHuespedes.get(i);
             return new Huesped(huesped);
         } else {
-            throw new NullPointerException("ERROR: No existe ningún huésped como el indicado.");
+            return null;
         }
     }
 
     public void borrar(Huesped huesped) throws OperationNotSupportedException {
 
-        if (coleccionHuespedes.contains(huesped)) {
-            coleccionHuespedes.remove(huesped);
-        } else {
+        if (huesped == null) {
             throw new NullPointerException("ERROR: No se puede borrar un huésped nulo.");
         }
+
+        if (!coleccionHuespedes.contains(huesped)) {
+            throw new OperationNotSupportedException("ERROR: No existe ningún huésped como el indicado.");
+        }
+        coleccionHuespedes.remove(huesped);
     }
 }

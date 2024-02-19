@@ -9,6 +9,7 @@ import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Reservas {
@@ -26,8 +27,11 @@ public class Reservas {
 
         List<Reserva> copiaReservas = new ArrayList<>();
 
-        copiaReservas.addAll(coleccionReservas);
-
+        Iterator<Reserva> iterador = coleccionReservas.iterator();
+        while (iterador.hasNext()) {
+            Reserva reserva = iterador.next();
+            copiaReservas.add(new Reserva(reserva));
+        }
         return copiaReservas;
     }
 
@@ -43,34 +47,41 @@ public class Reservas {
         if (reserva == null) {
             throw new NullPointerException("ERROR: No se puede insertar una reserva nula.");
         }
-        if (buscar(reserva) != null) {
+        if (coleccionReservas.contains(reserva)) {
             throw new OperationNotSupportedException("ERROR: Ya existe una reserva igual.");
         }
-        if (!coleccionReservas.contains(reserva)) {
-            coleccionReservas.add(reserva);
-        }
+        coleccionReservas.add(reserva);
     }
+
     public Reserva buscar(Reserva reserva) {
+
+        if (reserva == null) {
+            throw new NullPointerException("ERROR: No se puede buscar una reserva nula.");
+        }
 
         if (coleccionReservas.contains(reserva)) {
             int i = coleccionReservas.indexOf(reserva);
             reserva = coleccionReservas.get(i);
             return new Reserva(reserva);
         } else {
-            throw new NullPointerException("ERROR: No existe ninguna reserva como la indicada.");
+            return null;
         }
     }
 
     public void borrar(Reserva reserva) throws OperationNotSupportedException {
-        if (coleccionReservas.contains(reserva)) {
-            coleccionReservas.remove(reserva);
-        } else {
+        if (reserva == null) {
             throw new NullPointerException("ERROR: No se puede borrar una reserva nula.");
         }
+
+        if (!coleccionReservas.contains(reserva)) {
+            throw new OperationNotSupportedException("ERROR: No existe ninguna reserva como la indicada.");
+        }
+        coleccionReservas.remove(reserva);
     }
+
     public List<Reserva> getReservas(Huesped huesped) {
         if (huesped == null) {
-            throw new NullPointerException("ERROR: No se pueden buscar reservas de un huésped nulo.");
+            throw new NullPointerException("ERROR: No se pueden buscar reservas de un huesped nulo.");
         }
         List<Reserva> reservasHuesped = new ArrayList<>();
         for (int i = 0; i < get().size(); i++) {

@@ -1,10 +1,12 @@
 package org.iesalandalus.programacion.reservashotel.modelo.negocio;
 
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Habitaciones {
@@ -35,8 +37,11 @@ public class Habitaciones {
 
         List<Habitacion> copiaHabitaciones = new ArrayList<>();
 
-        copiaHabitaciones.addAll(coleccionHabitaciones);
-
+        Iterator<Habitacion> iterador = coleccionHabitaciones.iterator();
+        while (iterador.hasNext()) {
+            Habitacion habitacion = iterador.next();
+            copiaHabitaciones.add(new Habitacion(habitacion));
+        }
         return copiaHabitaciones;
     }
 
@@ -45,36 +50,42 @@ public class Habitaciones {
         if (habitacion == null) {
             throw new NullPointerException("ERROR: No se puede insertar una habitación nula.");
         }
-        if (buscar(habitacion) != null) {
+        if (coleccionHabitaciones.contains(habitacion)) {
             throw new OperationNotSupportedException("ERROR: Ya existe una habitación con ese identificador.");
         }
-        if (!coleccionHabitaciones.contains(habitacion)) {
-            coleccionHabitaciones.add(habitacion);
-        }
+        coleccionHabitaciones.add(habitacion);
     }
 
     public Habitacion buscar(Habitacion habitacion) {
+
+        if (habitacion == null) {
+            throw new NullPointerException("ERROR: No se puede buscar una habitación nula.");
+        }
 
         if (coleccionHabitaciones.contains(habitacion)) {
             int i = coleccionHabitaciones.indexOf(habitacion);
             habitacion = coleccionHabitaciones.get(i);
             return new Habitacion(habitacion);
         } else {
-            throw new NullPointerException("ERROR: No existe ninguna habitación como la indicada.");
+            return null;
         }
     }
 
-    public void borrar(Habitacion habitacion) {
-        if (coleccionHabitaciones.contains(habitacion)) {
-            coleccionHabitaciones.remove(habitacion);
-        } else {
+    public void borrar(Habitacion habitacion) throws OperationNotSupportedException {
+        if (habitacion == null) {
             throw new NullPointerException("ERROR: No se puede borrar una habitación nula.");
         }
+
+        if (!coleccionHabitaciones.contains(habitacion)) {
+            throw new OperationNotSupportedException("ERROR: No existe ninguna habitación como la indicada.");
+        }
+        coleccionHabitaciones.remove(habitacion);
     }
+
     public int getTamano() {
         int counter = 0;
         for (int i = 0; i < coleccionHabitaciones.size(); i++)
-                counter++;
+            counter++;
         return counter;
     }
 }
