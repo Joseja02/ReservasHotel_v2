@@ -18,9 +18,6 @@ public enum Regimen {
     }
     @Override
     public String toString() {
-        return "Regimen{" +
-                "cadenaAMostrar='" + cadenaAMostrar + '\'' +
-                ", incrementoPrecio=" + incrementoPrecio +
-                '}';
+        return String.format("%d.- %s", ordinal(), cadenaAMostrar.replace("_"," "));
     }
 }

@@ -21,13 +21,17 @@ public class Habitaciones {
     }
 
     public List<Habitacion> get(TipoHabitacion tipoHabitacion) {
-        List<Habitacion> copia = copiaProfundaHabitaciones();
-        List<Habitacion> habitacionesTipo = new ArrayList<>();
 
-        for (int i = 0; i < coleccionHabitaciones.size(); i++) {
-            Habitacion habitacion = copia.get(i);
+        if (tipoHabitacion == null){
+            throw new NullPointerException("ERROR: El tipo de habitación no puede ser nulo");
+        }
+
+        List<Habitacion> habitacionesTipo = new ArrayList<>();
+        Iterator<Habitacion> iterador = coleccionHabitaciones.iterator();
+        while (iterador.hasNext()) {
+            Habitacion habitacion = iterador.next();
             if (habitacion.getTipoHabitacion().equals(tipoHabitacion)) {
-                habitacionesTipo.set(i, habitacion);
+                habitacionesTipo.add(habitacion);
             }
         }
         return habitacionesTipo;
@@ -84,8 +88,11 @@ public class Habitaciones {
 
     public int getTamano() {
         int counter = 0;
-        for (int i = 0; i < coleccionHabitaciones.size(); i++)
+        Iterator<Habitacion> iterador = coleccionHabitaciones.iterator();
+        while (iterador.hasNext()){
+            iterador.next();
             counter++;
+        }
         return counter;
     }
 }

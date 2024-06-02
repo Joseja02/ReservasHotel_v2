@@ -23,8 +23,6 @@ import java.util.Comparator;
 import static org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva.FORMATO_FECHA_RESERVA;
 
 public class MainApp {
-    public static int CAPACIDAD = 4;
-
     public static void main(String[] args) {
 
         Vista vista = new Vista();
@@ -33,5 +31,4 @@ public class MainApp {
 
         controlador.comenzar();
     }
-
 }

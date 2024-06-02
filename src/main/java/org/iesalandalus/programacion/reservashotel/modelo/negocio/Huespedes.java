@@ -33,8 +33,11 @@ public class Huespedes {
 
     public int getTamano() {
         int counter = 0;
-        for (int i = 0; i < coleccionHuespedes.size(); i++)
+        Iterator<Huesped> iterador = coleccionHuespedes.iterator();
+        while (iterador.hasNext()){
+            iterador.next();
             counter++;
+        }
         return counter;
     }
 

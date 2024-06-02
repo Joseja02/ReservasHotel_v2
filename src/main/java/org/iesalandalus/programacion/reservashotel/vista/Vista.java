@@ -15,6 +15,7 @@ import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva.FORMATO_FECHA_RESERVA;
@@ -60,9 +61,10 @@ public class Vista {
             case MOSTRAR_RESERVAS -> mostrarReservas();
             case CONSULTAR_DISPONIBILIDAD -> {
                 TipoHabitacion tipoHabitacion = Consola.leerTipoHabitacion();
-                LocalDate fechaInicioReserva = Consola.leerFecha("Introduzca fecha inicio reserva (" + FORMATO_FECHA_RESERVA + "):");
-                LocalDate fechaFinReserva = Consola.leerFecha("Introduzca fecha inicio reserva (" + FORMATO_FECHA_RESERVA + "):");
-                consultarDisponibilidad(tipoHabitacion, fechaInicioReserva, fechaFinReserva);
+                LocalDate fechaInicioReserva = Consola.leerFecha("Introduzca la fecha de inicio de la reserva (" + FORMATO_FECHA_RESERVA + "):");
+                LocalDate fechaFinReserva = Consola.leerFecha("Introduzca la fecha de fin de la reserva (" + FORMATO_FECHA_RESERVA + "):");
+                Habitacion habitacionDisponible = consultarDisponibilidad(tipoHabitacion, fechaInicioReserva, fechaFinReserva);
+                System.out.println("La siguiente habitacion está disponible: " + habitacionDisponible);
             }
             case REALIZAR_CHECKIN -> realizarCheckin();
             case REALIZAR_CHECKOUT -> realizarCheckout();
@@ -74,13 +76,10 @@ public class Vista {
         try {
             Huesped huesped = Consola.leerHuesped();
             controlador.insertar(huesped);
-            System.out.print("Huesped ha sido insertado");
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: El huésped a insertar no puede ser nulo");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR: El huésped a insertar contiene un valor no permitido");
-        } catch (OperationNotSupportedException e) {
-            System.out.print("ERROR: La operación que intentas realizar no está permitida.");
+            System.out.print("El huesped ha sido insertado");
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException |
+                 DateTimeParseException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -93,12 +92,9 @@ public class Vista {
             } else {
                 System.out.print("El huesped no existe");
             }
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: No se puede buscar un huésped nulo.");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR: El huesped que buscas contiene un valor no permitido");
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
-
     }
 
     private static void borrarHuesped() {
@@ -106,12 +102,8 @@ public class Vista {
             Huesped huesped = Consola.leerHuespedPorDni();
             controlador.borrar(huesped);
             System.out.print("Huesped ha sido borrado");
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: No se puede borrar un huésped nulo.");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR: El huesped a borrar contiene un valor no permitido");
-        } catch (OperationNotSupportedException e) {
-            System.out.print("ERROR: La operación que intentas realizar no está permitida.");
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -128,9 +120,8 @@ public class Vista {
             } else {
                 System.out.println("No existen huéspedes ");
             }
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -139,12 +130,8 @@ public class Vista {
             Habitacion habitacion = Consola.leerHabitacion();
             controlador.insertar(habitacion);
             System.out.print("La habitación ha sido insertada");
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: La habitación a insertar no puede ser nula");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR: La habitación a insertar contiene un valor no permitido");
-        } catch (OperationNotSupportedException e) {
-            System.out.print("ERROR: La operación que intentas realizar no está permitida.");
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -153,14 +140,12 @@ public class Vista {
             Habitacion habitacion = Consola.leerHabitacionPorIdentificador();
             habitacion = controlador.buscar(habitacion);
             if (habitacion != null) {
-                System.out.println(habitacion.toString());
+                System.out.println(habitacion);
             } else {
                 System.out.print("La habitación no existe");
             }
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: La habitación a buscar no puede ser nula");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR: La habitación a buscar contiene un valor no permitido");
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -169,12 +154,8 @@ public class Vista {
             Habitacion habitacion = Consola.leerHabitacionPorIdentificador();
             controlador.borrar(habitacion);
             System.out.print("La habitación ha sido borrada");
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: La habitación a borrar no puede ser nula");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR:La habitación a borrar contiene un valor no permitido");
-        } catch (OperationNotSupportedException e) {
-            System.out.print("ERROR: La operación que intentas realizar no está permitida.");
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -192,15 +173,23 @@ public class Vista {
             } else {
                 System.out.println("No existen habitaciones ");
             }
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
     private static void insertarReserva() {
         try {
             Reserva reserva = Consola.leerReserva();
+
+            Huesped huespedReserva = reserva.getHuesped();
+            huespedReserva = controlador.buscar(huespedReserva);
+            reserva.setHuesped(huespedReserva);
+
+            Habitacion habitacionReserva = reserva.getHabitacion();
+            habitacionReserva = controlador.buscar(habitacionReserva);
+            reserva.setHabitacion(habitacionReserva);
+
             Habitacion habitacionDisponible = consultarDisponibilidad(reserva.getHabitacion().getTipoHabitacion(), reserva.getFechaInicioReserva(), reserva.getFechaFinReserva());
 
             if (habitacionDisponible != null) {
@@ -216,12 +205,9 @@ public class Vista {
                 System.out.println("ERROR: La habitación que intentas reservar no está disponible");
             }
 
-        } catch (NullPointerException e) {
-            System.out.print("ERROR: La reserva a insertar no puede ser nula");
-        } catch (IllegalArgumentException e) {
-            System.out.print("ERROR:La reserva a insertar contiene un valor no permitido");
-        } catch (OperationNotSupportedException e) {
-            System.out.print("ERROR: La operación que intentas realizar no está permitida.");
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException |
+                 DateTimeParseException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -259,9 +245,8 @@ public class Vista {
             } else {
                 System.out.println("No existen reservas ");
             }
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -298,9 +283,8 @@ public class Vista {
             } else {
                 System.out.println("No existen reservas ");
             }
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -353,9 +337,8 @@ public class Vista {
                 System.out.print("El huesped no existe");
             }
 
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException | OperationNotSupportedException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -392,9 +375,8 @@ public class Vista {
             } else {
                 System.out.println("No existen reservas ");
             }
-        } catch (Exception e) {
-            System.out.print("ERROR: " + e.getMessage());
-            Entrada.cadena();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            System.out.print(e.getMessage());
         }
     }
 
@@ -472,13 +454,12 @@ public class Vista {
         huesped = controlador.buscar(huesped);
         boolean checkinFallido = false;
 
-        // List<Reserva> reservasHuesped = controlador.getReservas(huesped)
         List<Reserva> reservasDelHuesped = controlador.getReservas(huesped);
-
-        for (int i = 0; i < reservasDelHuesped.size(); i++) {
-
-            if (reservasDelHuesped.get(i).getFechaInicioReserva().isEqual(LocalDate.now())) {
-                controlador.realizarCheckin(reservasDelHuesped.get(i), LocalDateTime.now());
+        Iterator<Reserva> iterador = reservasDelHuesped.iterator();
+        while (iterador.hasNext()) {
+            Reserva reserva = iterador.next();
+            if (reserva.getFechaInicioReserva().isEqual(LocalDate.now())) {
+                controlador.realizarCheckin(reserva, LocalDateTime.now());
             } else {
                 checkinFallido = true;
             }

@@ -12,7 +12,7 @@ public class Reserva {
     public static final int MAX_NUMERO_MESES_RESERVA = 6;
     private static final int MAX_HORAS_POSTERIOR_CHECKOUT = 12;
     public static final String FORMATO_FECHA_RESERVA = "dd/MM/yyyy";
-    public static final String FORMATO_FECHA_HORA_RESERVA = "dd/MM/yyyy HH/mm";
+    public static final String FORMATO_FECHA_HORA_RESERVA = "dd/MM/yyyy HH:mm";
     private Huesped huesped;
     private Habitacion habitacion;
     private Regimen regimen;
@@ -24,25 +24,26 @@ public class Reserva {
     private int numeroPersonas;
 
     public Huesped getHuesped() {
-        return huesped;
+        return new Huesped(huesped);
     }
 
     public void setHuesped(Huesped huesped) {
         if (huesped == null) {
             throw new NullPointerException("ERROR: El huésped de una reserva no puede ser nulo.");
         }
-        this.huesped = huesped;
+        this.huesped = new Huesped(huesped);
     }
 
     public Habitacion getHabitacion() {
-        return habitacion;
+        return new Habitacion(habitacion);
     }
 
     public void setHabitacion(Habitacion habitacion) {
         if (habitacion == null) {
             throw new NullPointerException("ERROR: La habitación de una reserva no puede ser nula.");
         }
-        this.habitacion = habitacion;
+
+        this.habitacion = new Habitacion(habitacion);
     }
 
     public Regimen getRegimen() {

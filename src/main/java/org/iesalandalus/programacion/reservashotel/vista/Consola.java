@@ -43,7 +43,7 @@ public final class Consola {
         String telefono;
         String correo;
         String dni;
-        LocalDate fechaNacimiento;
+        LocalDate fechaNacimiento = null;
         System.out.print("Introduzca DNI del Huesped: ");
         dni = Entrada.cadena();
         System.out.print("Introduzca nombre del Huesped: ");
@@ -52,8 +52,12 @@ public final class Consola {
         telefono = Entrada.cadena();
         System.out.print("Introduzca email del Huesped: ");
         correo = Entrada.cadena();
-        System.out.print("Introduzca fecha de nacimiento del Huesped (Formato fecha: " + FORMATO_FECHA_RESERVA + ")");
-        fechaNacimiento = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
+        try {
+            System.out.print("Introduzca fecha de nacimiento del Huesped (Formato fecha: " + FORMATO_FECHA_RESERVA + ")");
+            fechaNacimiento = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
+        } catch (DateTimeParseException e){
+            System.out.println("ERROR: La fecha introducida contiene un formato erróneo.");
+        }
 
         huesped = new Huesped(nombre, dni, correo, telefono, fechaNacimiento);
         return huesped;
@@ -110,18 +114,18 @@ public final class Consola {
         System.out.print("Introduzca puerta de habitación: ");
         puerta = Entrada.entero();
 
-        habitacion = new Habitacion(planta, puerta, 50.25, TipoHabitacion.DOBLE);
+        habitacion = new Habitacion(planta, puerta, 50.25, TipoHabitacion.SUITE);
         return habitacion;
     }
 
     public static TipoHabitacion leerTipoHabitacion() {
         for (TipoHabitacion opcion : TipoHabitacion.values()) {
-            System.out.println(opcion.ordinal() + "  -  " + opcion.toString());
+            System.out.println(opcion);
         }
         System.out.print("Escoja tipo de habitación: ");
         int eleccionHabitacion = Entrada.entero();
 
-        if (eleccionHabitacion < 1 || eleccionHabitacion > TipoHabitacion.values().length-1){
+        if (eleccionHabitacion < 0 || eleccionHabitacion > TipoHabitacion.values().length-1){
             throw new IllegalArgumentException("ERROR: El tipo de habitación escogido no existe o está fuera de rango.");
         }
         return TipoHabitacion.values()[eleccionHabitacion];
@@ -129,38 +133,42 @@ public final class Consola {
 
     public static Regimen leerRegimen() {
         for (Regimen opcion : Regimen.values()) {
-            System.out.println(opcion.ordinal() + "  -  " + opcion.toString());
+            System.out.println(opcion);
         }
         System.out.print("Escoja tipo de régimen: ");
         int eleccionRegimen = Entrada.entero();
 
-        if (eleccionRegimen < 1 || eleccionRegimen > Regimen.values().length-1){
+        if (eleccionRegimen < 0 || eleccionRegimen > Regimen.values().length-1){
             throw new IllegalArgumentException("ERROR: El tipo de habitación escogido no existe o está fuera de rango.");
         }
         return Regimen.values()[eleccionRegimen];
     }
 
     public static Reserva leerReserva() {
-        Reserva reserva;
-        Huesped huesped;
-        Habitacion habitacion;
-        Regimen regimen;
-        LocalDate fechaInicioReserva;
-        LocalDate fechaFinReserva;
-        int numeroPersonas;
+        Reserva reserva = null;
+        try {
+            Huesped huesped;
+            Habitacion habitacion;
+            Regimen regimen;
+            LocalDate fechaInicioReserva = null;
+            LocalDate fechaFinReserva = null;
+            int numeroPersonas;
 
-        System.out.print("Introduzca la fecha inicio de reserva(" + FORMATO_FECHA_RESERVA + "): ");
-        fechaInicioReserva = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
-        System.out.print("Introduzca la fecha fin de reserva(" + FORMATO_FECHA_RESERVA + "): ");
-        fechaFinReserva = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
-        System.out.print("Introduzca número de personas: ");
-        numeroPersonas = Entrada.entero();
+            System.out.print("Introduzca la fecha inicio de reserva(" + FORMATO_FECHA_RESERVA + "): ");
+            fechaInicioReserva = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
+            System.out.print("Introduzca la fecha fin de reserva(" + FORMATO_FECHA_RESERVA + "): ");
+            fechaFinReserva = LocalDate.parse(Entrada.cadena(), DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA));
+            System.out.print("Introduzca número de personas: ");
+            numeroPersonas = Entrada.entero();
 
-        huesped = leerHuespedPorDni();
-        habitacion = leerHabitacionPorIdentificador();
-        regimen = leerRegimen();
+            huesped = leerHuespedPorDni();
+            habitacion = leerHabitacionPorIdentificador();
+            regimen = leerRegimen();
 
-        reserva = new Reserva(huesped, habitacion, regimen, fechaInicioReserva, fechaFinReserva, numeroPersonas);
+            reserva = new Reserva(huesped, habitacion, regimen, fechaInicioReserva, fechaFinReserva, numeroPersonas);
+        } catch (DateTimeParseException e) {
+            System.out.println("ERROR: La fecha introducida tiene un formato erróneo o es nula.");
+        }
         return reserva;
     }
 
